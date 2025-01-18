@@ -26,7 +26,7 @@ public class InputFileParserTest {
         Stream<String> inputStream = Stream.of(
                 "New York - London",
                 "london - paris",
-                "CITIES FROM New York",
+                "CITIES FROM New York in 1 jumps",
                 "CAN I TELEPORT FROM New York TO Paris",
                 "LOOP POSSIBLE FROM New York"
         );

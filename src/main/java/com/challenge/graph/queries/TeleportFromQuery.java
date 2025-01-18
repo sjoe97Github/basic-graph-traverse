@@ -15,7 +15,7 @@ public class TeleportFromQuery implements GraphQuery {
 
     @Override public GraphQuery prepare() {
         // the raw query string should be in the form: "can I teleport from TheCity to TheOtherCity"
-        String[] lineParts = rawQuery.split("from");
+        String[] lineParts = rawQuery.split("to");
         if (lineParts.length == 2) {
             // The FIRST part should be of the form "can I teleport from TheCity"
             String[] firstPartParts = lineParts[0].split("from");

@@ -72,13 +72,13 @@ public class InputFileParser {
 
         String lowerCaseLine = line.toLowerCase();
         if (lowerCaseLine.startsWith("cities")) {
-            queries.add(new CitiesFromQuery(line).prepare());
+            queries.add(new CitiesFromQuery(lowerCaseLine).prepare());
         } else if (lowerCaseLine.startsWith("can")){
-            queries.add(new TeleportFromQuery(line).prepare());
+            queries.add(new TeleportFromQuery(lowerCaseLine).prepare());
         } else if (lowerCaseLine.startsWith("loop")) {
-            queries.add(new LoopPossibleQuery(line).prepare());
+            queries.add(new LoopPossibleQuery(lowerCaseLine).prepare());
         } else if (lowerCaseLine.contains("-")) {
-            String[] parts = line.split("-");
+            String[] parts = lowerCaseLine.split("-");
 
             // A length < 2 test might be sufficient, but any length other than 2 indicates a problem with the input line format.
             if (parts.length != 2) {
