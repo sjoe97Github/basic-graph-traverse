@@ -1,4 +1,4 @@
-package com.challenge.input;
+package com.challenge.graph;
 
 import com.challenge.graph.queries.GraphQuery;
 import com.challenge.graph.queries.CitiesFromQuery;

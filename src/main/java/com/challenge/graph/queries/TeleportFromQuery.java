@@ -20,14 +20,14 @@ public class TeleportFromQuery implements GraphQuery {
             // The FIRST part should be of the form "can I teleport from TheCity"
             String[] firstPartParts = lineParts[0].split("from");
             if (firstPartParts.length == 2) {
-                this.fromCity = firstPartParts[1].stripTrailing(); // trim trailing whitespace
+                this.fromCity = firstPartParts[1].stripTrailing().stripLeading(); // TODO - should only need to strip leading whitespace
                 this.fromCity = this.fromCity.toLowerCase();
             } else {
                 throw new IllegalArgumentException("Invalid 'can I teleport from TheCity to TheOtherCity' input line format: " + rawQuery);
             }
 
             // The SECOND part should be the value of "TheOtherCity"
-            this.toCity = lineParts[1].stripTrailing(); // trim trailing whitespace
+            this.toCity = lineParts[1].stripTrailing().stripLeading(); // TODO - should only need to strip leading whitespace
             this.toCity = this.toCity.toLowerCase();
         } else {
             throw new IllegalArgumentException("Invalid 'can I teleport from TheCity to TheOtherCity' input line format: " + rawQuery);

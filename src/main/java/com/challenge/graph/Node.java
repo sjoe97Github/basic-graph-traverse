@@ -24,12 +24,14 @@ public class Node {
         return name;
     }
 
-    public void link(Node node) {
-        connections.add(node);
-    }
-
     public Set<Node> getConnections() {
         return connections;
+    }
+
+    // Only the GraphBuilder can link nodes together.
+    // Note that being a method protected means it can also be accessed from unit tests classes
+    protected void link(Node node) {
+        connections.add(node);
     }
 
     @Override

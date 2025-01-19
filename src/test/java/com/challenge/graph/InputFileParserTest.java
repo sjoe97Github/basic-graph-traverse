@@ -1,4 +1,4 @@
-package com.challenge.input;
+package com.challenge.graph;
 
 import com.challenge.graph.queries.CitiesFromQuery;
 import com.challenge.graph.queries.LoopPossibleQuery;
@@ -13,8 +13,8 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class InputFileParserTest {
-    private InputFileParser parser;
+public class InputFileParserTest extends BaseGraphTest  {
+    InputFileParser parser;
 
     @BeforeEach
     void setUp() {

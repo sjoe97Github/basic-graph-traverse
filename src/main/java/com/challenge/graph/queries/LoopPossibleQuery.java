@@ -20,7 +20,7 @@ public class LoopPossibleQuery implements GraphQuery {
         // the raw query string should be in the form: "loop possible from TheCity"
         String[] lineParts = rawQuery.split("from");
         if (lineParts.length == 2) {
-            this.city = lineParts[1].trim();
+            this.city = lineParts[1].stripTrailing().stripLeading(); // TODO - should only need to strip leading whitespace
             this.city = this.city.toLowerCase();
         } else {
             throw new IllegalArgumentException("Invalid 'loop possible' input line format: " + rawQuery);
