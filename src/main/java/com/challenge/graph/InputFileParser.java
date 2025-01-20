@@ -15,8 +15,23 @@ import java.util.stream.Stream;
 public class InputFileParser {
     //  Use a Set to eliminate duplicate links
     private final Set<Pair<String, String>> links = new HashSet<>();
+
     //  Maintain the order of the queries parsed from the input file
     private final List<GraphQuery> queries = new LinkedList<>();
+
+    public void parse(String filePath) throws IOException {
+
+        File fileToParse = new File(filePath);
+        if (!fileToParse.exists()) {
+            throw new IllegalArgumentException("File does not exist: " + filePath);
+        }
+
+        parse(fileToParse);
+    }
+
+//    public void parse(ClassPathResource resource) throws IOException {
+//        parse(resource.getFile());
+//    }
 
     public void parse(File file) {
         try (Stream<String> lines = Files.lines(file.toPath())) {

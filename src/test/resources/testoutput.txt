@@ -1,0 +1,6 @@
+cities from Seattle in 1 jumps: Baltimore, New York
+cities from Seattle in 2 jumps: Baltimore, New York, Philadelphia, Washington
+can I teleport from New York to Atlanta: yes
+can I teleport from Oakland to Atlanta: no
+loop possible from Oakland: yes
+loop possible from Washington: no

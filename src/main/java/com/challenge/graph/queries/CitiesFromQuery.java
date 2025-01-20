@@ -3,7 +3,9 @@ package com.challenge.graph.queries;
 import com.challenge.graph.Graph;
 import com.challenge.graph.StringNode;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,9 +56,14 @@ public class CitiesFromQuery implements GraphQuery {
                                     .map(StringNode::getName)
                                     .collect(Collectors.toSet());
 
+        // TODO - Is this overkill?  It's only needed to force a deterministic order of results for testing purposes.
+        LinkedList<String> orderedCities = this.reachableCities.stream()
+                                                    .sorted()
+                                                    .collect(Collectors.toCollection(LinkedList::new));
+
         // Construct and return the result string
         return this.result = String.format(RESULT_PREFIX_TEMPLATE, this.city, this.maxHops) +
-                       this.reachableCities.stream().collect(Collectors.joining(", "));
+                orderedCities.stream().collect(Collectors.joining(", "));
     }
 
     @Override
