@@ -2,14 +2,11 @@ package com.challenge;
 
 import com.challenge.graph.Graph;
 import com.challenge.graph.GraphBuilder;
-import com.challenge.graph.Node;
 import com.challenge.graph.queries.GraphQuery;
-import com.challenge.graph.utility.Pair;
 import com.challenge.graph.InputFileParser;
 
 import java.io.File;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TeleportApplication {

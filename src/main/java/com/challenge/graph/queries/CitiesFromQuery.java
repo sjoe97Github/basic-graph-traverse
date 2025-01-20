@@ -1,13 +1,18 @@
 package com.challenge.graph.queries;
 
 import com.challenge.graph.Graph;
+import com.challenge.graph.StringNode;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class CitiesFromQuery implements GraphQuery {
+    // TODO - Consider if this should be passed into a constructor or a setter?
+    private static final String RESULT_PREFIX_TEMPLATE = "Cities from %s in %s jumps: ";
+
     // Protected so accessible to test classes
     private final String rawQuery;
     protected String city;
@@ -30,7 +35,7 @@ public class CitiesFromQuery implements GraphQuery {
                 throw new IllegalArgumentException("Invalid city name in query: " + rawQuery);
             }
 
-            this.city = this.city.toLowerCase();
+            this.city = this.city.trim().toLowerCase(); // TODO - Should not need trim due to regex group matching
             String jumpsValue = matcher.group(2);
             try {
                 this.maxHops = Integer.parseInt(jumpsValue);
@@ -44,7 +49,15 @@ public class CitiesFromQuery implements GraphQuery {
 
     @Override
     public String execute(Graph graph) {
-        return "";
+//        graph.reachableNodes("washington", 2);
+        this.reachableCities = graph.reachableNodes(this.city, this.maxHops)
+                                    .stream()
+                                    .map(StringNode::getName)
+                                    .collect(Collectors.toSet());
+
+        // Construct and return the result string
+        return String.format(RESULT_PREFIX_TEMPLATE, this.city, this.maxHops) +
+                       this.reachableCities.stream().collect(Collectors.joining(", "));
     }
 
     @Override

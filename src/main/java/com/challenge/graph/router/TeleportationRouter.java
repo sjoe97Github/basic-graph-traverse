@@ -1,9 +1,10 @@
 package com.challenge.graph.router;
 
 import com.challenge.graph.Graph;
-import com.challenge.graph.Node;
+import com.challenge.graph.StringNode;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 class TeleportationRouter implements Router {
@@ -14,16 +15,16 @@ class TeleportationRouter implements Router {
     }
 
     @Override
-    public Route route(Node start, Node end, int maxHops) {
+    public Route route(StringNode start, StringNode end, int maxHops) {
         Route route = new Route();
-        Set<Node> visited = new HashSet<>();
+        Set<StringNode> visited = new HashSet<>();
         if (dfs(start, end, maxHops, visited, route)) {
             return route;
         }
         return null;
     }
 
-    private boolean dfs(Node current, Node end, int remainingHops, Set<Node> visited, Route route) {
+    private boolean dfs(StringNode current, StringNode end, int remainingHops, Set<StringNode> visited, Route route) {
         if (remainingHops < 0) return false;
         if (visited.contains(current)) return false;
 
@@ -32,7 +33,7 @@ class TeleportationRouter implements Router {
 
         if (current.equals(end)) return true;
 
-        for (Node neighbor : current.getConnections()) {
+        for (StringNode neighbor : current.getNodeLinks()) {
             if (dfs(neighbor, end, remainingHops - 1, visited, route)) {
                 return true;
             }
@@ -43,26 +44,48 @@ class TeleportationRouter implements Router {
         return false;
     }
 
+    /**
+     * Recursively traverse the graph to find all nodes that can be reached from the given start node.
+     * This method uses a recursive depth-first search (BFS) algorithm to traverse the graph, avoiding cycles.
+     *
+     * @param start
+     * @param nodesToHops
+     * @return the
+     */
     @Override
-    public Set<Node> reachableNodes(Node start, int maxHops) {
-        Set<Node> reachable = new HashSet<>();
-        explore(start, maxHops, reachable, new HashSet<>());
-        return reachable;
+    public Map<StringNode, Integer> reachableNodes(StringNode start,  int currentDepth, int maxDepth, Map<StringNode, Integer> nodesToHops) {
+        Set<StringNode> reachable = new HashSet<>();
+
+        if (currentDepth < maxDepth) {
+            start.getNodeLinks().forEach(neighbor -> {
+                if (!nodesToHops.containsKey(neighbor)) {
+                    nodesToHops.put(neighbor, currentDepth);
+                    reachableNodes(neighbor, currentDepth + 1, maxDepth, nodesToHops);
+                }
+            });
+        }
+
+        return nodesToHops;
     }
 
-    private void explore(Node current, int remainingHops, Set<Node> reachable, Set<Node> visited) {
+    private void explore(StringNode current, int remainingHops, Set<StringNode> reachable, Set<StringNode> visited) {
         if (remainingHops < 0 || visited.contains(current)) return;
         reachable.add(current);
         visited.add(current);
-        for (Node neighbor : current.getConnections()) {
+        for (StringNode neighbor : current.getNodeLinks()) {
             explore(neighbor, remainingHops - 1, reachable, visited);
         }
     }
 
     @Override
+    public Set<Route> findAllRoutesBetweenNodes(StringNode start, StringNode end) {
+        return Set.of();
+    }
+
+    @Override
     public Route findUniqueReturnRoute(Route route) {
-        Set<Node> visited = new HashSet<>(route.getPath());
-        Node lastNode = route.getPath().getLast();
+        Set<StringNode> visited = new HashSet<>(route.getPath());
+        StringNode lastNode = route.getPath().getLast();
         Route uniqueRoute = new Route();
 
         if (findReturnRoute(lastNode, visited, uniqueRoute)) {
@@ -72,13 +95,13 @@ class TeleportationRouter implements Router {
         return null;
     }
 
-    private boolean findReturnRoute(Node current, Set<Node> excluded, Route uniqueRoute) {
+    private boolean findReturnRoute(StringNode current, Set<StringNode> excluded, Route uniqueRoute) {
         if (excluded.contains(current)) return false;
 
         uniqueRoute.addNode(current);
         excluded.add(current);
 
-        for (Node neighbor : current.getConnections()) {
+        for (StringNode neighbor : current.getNodeLinks()) {
             if (findReturnRoute(neighbor, excluded, uniqueRoute)) {
                 return true;
             }
