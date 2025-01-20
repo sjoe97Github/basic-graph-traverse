@@ -74,7 +74,7 @@ public class StringNode extends Node {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.name.toLowerCase());
+        return Objects.hash(this.name);
     }
 
     @Override

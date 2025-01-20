@@ -18,7 +18,7 @@ public class Graph {
     private Router router;
 
     public Graph() {
-        // Default router is TeleportationRouter.
+        // Create the default router.
         router = RouterFactory.createRouter(RouterFactory.RouterTypes.TELEPORTATION, this);
     }
 
@@ -65,33 +65,35 @@ public class Graph {
             throw new IllegalArgumentException("Start node not found.");
         }
 
+        //  TODO - Better map variable name?
+        //  Track the number of hops required to reach each node by mapping the node to the number of hops.
         Map<StringNode, Integer> nodesToHops = new HashMap<>();
         nodesToHops.put(startNode, 0);
 
+        //  User router to find reachable nodes.
         router.reachableNodes(startNode, 0, maxHops, nodesToHops);
 
-        Set<StringNode> reachableNodes = nodesToHops.entrySet().stream()
+        return nodesToHops.entrySet().stream()
                 .filter(entry -> entry.getValue() <= maxHops)
                 .map(Map.Entry::getKey)
                 .filter(node ->!node.equals(startNode)) // Exclude the start node.
                 .collect(Collectors.toSet());
-
-        return reachableNodes;
-    }
-
-    public Route uniqueReturnRoute(Route route) {
-        return router.findUniqueReturnRoute(route);
     }
 
     /**
      * Is a specified destination city is reachable from a specified origin city, return the first
      * available route between them.
      *
+     * Caveat:  This method simply leverages the reachableNodes() method to find all reachable nodes and then,
+     *          checks if the destination city is one of those reachable nodes.
+     *          TODO - Is there a more efficient way to find the unique return route?
+     *
      * @param originCity - name of the city from which to start the search.
      * @param destinationCity - name of the city to reach.
      * @return Route - null if no route; otherwise the first discovered route between the cities.
      */
     public Boolean isCityReachableFrom(String originCity, String destinationCity) {
+        // TODO - Why not simmply return a boolean scalar?
         return reachableNodes(originCity, MAX_ALLOWED_HOPS).contains(getNode(destinationCity));
     }
 
@@ -103,27 +105,8 @@ public class Graph {
      * @apiNote A loop does not allow return to the origin city by any portion of the destination route.
      */
     public Boolean isLoopBackPossible(String originCity) {
-        return null; // Placeholder for actual implementation
-    }
-
-
-
-    // *
-    // *****************************************************************************************************************
-    // *
-    public Route findRoute(String startName, String endName, int maxHops) {
-        StringNode start = getNode(startName);
-        StringNode end = getNode(endName);
-        if (start == null) {
-            throw new IllegalArgumentException(String.format("Route Error: Starting node doesn't exist, node-name= %s!", startName));
-        } else if (end == null) {
-            throw new IllegalArgumentException(String.format("Route Error: End node doesn't exist, node-name= %s!", endName));
-        }
-        return router.route(start, end, maxHops);
-    }
-
-    public Route findRoute(String startName, String endName) {
-        return findRoute(startName, endName, 1);
+        // TODO - Why not simmply return a boolean scalar?
+        return router.isLoopBackPossible(getNode(originCity));
     }
 
     // Allow default router to be overridden.

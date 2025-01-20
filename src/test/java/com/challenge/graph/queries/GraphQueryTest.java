@@ -26,7 +26,7 @@ class GraphQueryTest  extends BaseGraphTest {
 
     @Test
     void testCitiesFromQuery() {
-        GraphQuery query = new CitiesFromQuery("CITIES FROM Seattle in 2 jumps".toLowerCase()).prepare();
+        GraphQuery query = new CitiesFromQuery("cities from Seattle in 2 jumps").prepare();
         var result = query.execute(graph);
 
         assertTrue(result.contains("jumps: "));
@@ -36,13 +36,13 @@ class GraphQueryTest  extends BaseGraphTest {
         var resultingTwoHopCities = Arrays.stream(result.split("jumps: ")[1].split(", ")).map(String::trim).collect(Collectors.toSet());
         assertAll(() -> {
             assertEquals(4, resultingTwoHopCities.size());
-            assertTrue(resultingTwoHopCities.containsAll(Set.of("baltimore", "philadelphia", "washington", "new york")));
+            assertTrue(resultingTwoHopCities.containsAll(Set.of("Baltimore", "Philadelphia", "Washington", "New York")));
         });
 
         //
         // Test only one hop
         //
-        query = new CitiesFromQuery("CITIES FROM Seattle in 1 jumps".toLowerCase()).prepare();
+        query = new CitiesFromQuery("cities from Seattle in 1 jumps").prepare();
         result = query.execute(graph);
 
         assertTrue(result.contains("jumps: "));
@@ -52,8 +52,30 @@ class GraphQueryTest  extends BaseGraphTest {
         var resultingOneHopCities = Arrays.stream(result.split("jumps: ")[1].split(", ")).map(String::trim).collect(Collectors.toSet());
         assertAll(() -> {
             assertEquals(2, resultingOneHopCities.size());
-            assertTrue(resultingOneHopCities.containsAll(Set.of("baltimore", "new york")));
+            assertTrue(resultingOneHopCities.containsAll(Set.of("Baltimore", "New York")));
         });
 
+    }
+
+    @Test
+    void testTeleportFromQuery() {
+        GraphQuery query = new TeleportFromQuery("can I teleport from New York to Atlanta").prepare();
+        var result = query.execute(graph);
+        assertTrue(result.contains("can I teleport from New York to Atlanta: yes"));
+
+        query = new TeleportFromQuery("can I teleport from Oakland to Atlanta").prepare();
+        result = query.execute(graph);
+        assertTrue(result.contains("can I teleport from Oakland to Atlanta: no"));
+    }
+
+    @Test
+    void testLoopPossibleQuery() {
+        GraphQuery query = new LoopPossibleQuery("loop possible from Oakland").prepare();
+        var result = query.execute(graph);
+        assertTrue(result.contains("loop possible from Oakland: yes"));
+
+        query = new LoopPossibleQuery("loop possible from Washington").prepare();
+        result = query.execute(graph);
+        assertTrue(result.contains("loop possible from Washington: no"));
     }
 }

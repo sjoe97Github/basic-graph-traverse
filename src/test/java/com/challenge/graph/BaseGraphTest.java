@@ -27,12 +27,12 @@ public class BaseGraphTest {
                 "Los Angeles - Oakland",
                 "Seattle - New York",
                 "Seattle - Baltimore",
-                "CITIES FROM Seattle in 1 jumps",
-                "CITIES FROM Seattle in 2 jumps",
-                "CAN I TELEPORT FROM New York TO Atlanta",
-                "CAN I TELEPORT FROM Oakland TO Atlanta",
-                "LOOP POSSIBLE FROM Oakland",
-                "LOOP POSSIBLE FROM Washington"
+                "cities from Seattle in 1 jumps",
+                "cities from Seattle in 2 jumps",
+                "can I teleport from New York to Atlanta",
+                "can I teleport from Oakland to Atlanta",
+                "loop possible from Oakland",
+                "loop possible from Washington"
         );
         baseParser.parseLines(inputStream);
     }
@@ -42,38 +42,38 @@ public class BaseGraphTest {
         // Verify the base setup
         assertAll(() -> {
             assertEquals(9, baseParser.getLinks().size());
-            assertTrue(baseParser.getLinks().contains(new Pair<>("washington", "baltimore")));
-            assertTrue(baseParser.getLinks().contains(new Pair<>("washington", "atlanta")));
-            assertTrue(baseParser.getLinks().contains(new Pair<>("baltimore", "philadelphia")));
-            assertTrue(baseParser.getLinks().contains(new Pair<>("philadelphia", "new york")));
-            assertTrue(baseParser.getLinks().contains(new Pair<>("los angeles", "san fransisco")));
-            assertTrue(baseParser.getLinks().contains(new Pair<>("san fransisco", "oakland")));
-            assertTrue(baseParser.getLinks().contains(new Pair<>("los angeles", "oakland")));
-            assertTrue(baseParser.getLinks().contains(new Pair<>("seattle", "new york")));
-            assertTrue(baseParser.getLinks().contains(new Pair<>("seattle", "baltimore")));
+            assertTrue(baseParser.getLinks().contains(new Pair<>("Washington", "Baltimore")));
+            assertTrue(baseParser.getLinks().contains(new Pair<>("Washington", "Atlanta")));
+            assertTrue(baseParser.getLinks().contains(new Pair<>("Baltimore", "Philadelphia")));
+            assertTrue(baseParser.getLinks().contains(new Pair<>("Philadelphia", "New York")));
+            assertTrue(baseParser.getLinks().contains(new Pair<>("Los Angeles", "San Fransisco")));
+            assertTrue(baseParser.getLinks().contains(new Pair<>("San Fransisco", "Oakland")));
+            assertTrue(baseParser.getLinks().contains(new Pair<>("Los Angeles", "Oakland")));
+            assertTrue(baseParser.getLinks().contains(new Pair<>("Seattle", "New York")));
+            assertTrue(baseParser.getLinks().contains(new Pair<>("Seattle", "Baltimore")));
 
             assertEquals(6, baseParser.getQueries().size());
             assertInstanceOf(CitiesFromQuery.class, baseParser.getQueries().get(0));
-            assertEquals("seattle", ((CitiesFromQuery) baseParser.getQueries().get(0)).getCity());
+            assertEquals("Seattle", ((CitiesFromQuery) baseParser.getQueries().get(0)).getCity());
             assertEquals(1, ((CitiesFromQuery) baseParser.getQueries().get(0)).getMaxHops());
 
             assertInstanceOf(CitiesFromQuery.class, baseParser.getQueries().get(1));
-            assertEquals("seattle", ((CitiesFromQuery) baseParser.getQueries().get(1)).getCity());
+            assertEquals("Seattle", ((CitiesFromQuery) baseParser.getQueries().get(1)).getCity());
             assertEquals(2, ((CitiesFromQuery) baseParser.getQueries().get(1)).getMaxHops());
 
             assertInstanceOf(TeleportFromQuery.class, baseParser.getQueries().get(2));
-            assertEquals("new york", ((TeleportFromQuery) baseParser.getQueries().get(2)).getFromCity());
-            assertEquals("atlanta", ((TeleportFromQuery) baseParser.getQueries().get(2)).getToCity());
+            assertEquals("New York", ((TeleportFromQuery) baseParser.getQueries().get(2)).getFromCity());
+            assertEquals("Atlanta", ((TeleportFromQuery) baseParser.getQueries().get(2)).getToCity());
 
             assertInstanceOf(TeleportFromQuery.class, baseParser.getQueries().get(3));
-            assertEquals("oakland", ((TeleportFromQuery) baseParser.getQueries().get(3)).getFromCity());
-            assertEquals("atlanta", ((TeleportFromQuery) baseParser.getQueries().get(3)).getToCity());
+            assertEquals("Oakland", ((TeleportFromQuery) baseParser.getQueries().get(3)).getFromCity());
+            assertEquals("Atlanta", ((TeleportFromQuery) baseParser.getQueries().get(3)).getToCity());
 
             assertInstanceOf(LoopPossibleQuery.class, baseParser.getQueries().get(4));
-            assertEquals("oakland", ((LoopPossibleQuery) baseParser.getQueries().get(4)).getCity());
+            assertEquals("Oakland", ((LoopPossibleQuery) baseParser.getQueries().get(4)).getCity());
 
             assertInstanceOf(LoopPossibleQuery.class, baseParser.getQueries().get(5));
-            assertEquals("washington", ((LoopPossibleQuery) baseParser.getQueries().get(5)).getCity());
+            assertEquals("Washington", ((LoopPossibleQuery) baseParser.getQueries().get(5)).getCity());
         });
     }
 }

@@ -5,8 +5,8 @@ import com.challenge.graph.queries.LoopPossibleQuery;
 import com.challenge.graph.queries.TeleportFromQuery;
 import com.challenge.graph.utility.Pair;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
 import java.io.IOException;
 import java.util.stream.Stream;
@@ -25,10 +25,10 @@ public class InputFileParserTest extends BaseGraphTest  {
     void testParse_ValidInput() throws IOException {
         Stream<String> inputStream = Stream.of(
                 "New York - London",
-                "london - paris",
-                "CITIES FROM New York in 1 jumps",
-                "CAN I TELEPORT FROM New York TO Paris",
-                "LOOP POSSIBLE FROM New York"
+                "London - Paris",
+                "cities from New York in 1 jumps",
+                "can I teleport from New York to Paris",
+                "loop possible from New York"
         );
 
         assertDoesNotThrow(() -> parser.parseLines(inputStream));
@@ -37,8 +37,8 @@ public class InputFileParserTest extends BaseGraphTest  {
         // the order of the generated queries matches the order or the corresponding strings in parsed stream.
         assertAll(() -> {
             assertEquals(2, parser.getLinks().size());
-            assertTrue(parser.getLinks().contains(new Pair<>("new york", "london")));
-            assertTrue(parser.getLinks().contains(new Pair<>("london", "paris")));
+            assertTrue(parser.getLinks().contains(new Pair<>("New York", "London")));
+            assertTrue(parser.getLinks().contains(new Pair<>("London", "Paris")));
 
             assertEquals(3, parser.getQueries().size());
             assertInstanceOf(CitiesFromQuery.class, parser.getQueries().get(0));
@@ -50,7 +50,7 @@ public class InputFileParserTest extends BaseGraphTest  {
         // have been converted to lower case.
         CitiesFromQuery citiesFromQuery = (CitiesFromQuery) parser.getQueries().get(0);
         assertAll(() -> {
-            assertEquals("new york", citiesFromQuery.getCity());
+            assertEquals("New York", citiesFromQuery.getCity());
             assertEquals(1, citiesFromQuery.getMaxHops());
         });
     }
@@ -60,15 +60,15 @@ public class InputFileParserTest extends BaseGraphTest  {
         Stream<String> inputStream = Stream.of(
                 "New York - London",
                 "New York - London",
-                "london - paris"
+                "London - Paris"
         );
 
         assertDoesNotThrow(() -> parser.parseLines(inputStream));
 
         assertAll(() -> {
             assertEquals(2, parser.getLinks().size());
-            assertTrue(parser.getLinks().contains(new Pair<>("new york", "london")));
-            assertTrue(parser.getLinks().contains(new Pair<>("london", "paris")));
+            assertTrue(parser.getLinks().contains(new Pair<>("New York", "London")));
+            assertTrue(parser.getLinks().contains(new Pair<>("London", "Paris")));
         });
     }
 

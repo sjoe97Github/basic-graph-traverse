@@ -10,6 +10,7 @@ import java.util.Set;
 class TeleportationRouter implements Router {
     private TeleportationRouter() {}
 
+    //  TODO - What is the purpose of this ctor()?  Remove??
     protected TeleportationRouter(Graph graph) {
         // Additional initialization if needed
     }
@@ -46,16 +47,15 @@ class TeleportationRouter implements Router {
 
     /**
      * Recursively traverse the graph to find all nodes that can be reached from the given start node.
-     * This method uses a recursive depth-first search (BFS) algorithm to traverse the graph, avoiding cycles.
+     * This method uses a recursive depth-first search (DFS) algorithm to traverse the graph, avoiding cycles.
      *
      * @param start
      * @param nodesToHops
-     * @return the
+     * TODO - Why return anything?
+     * @return Simply return the final state of the nodesToHops input parameter.
      */
     @Override
     public Map<StringNode, Integer> reachableNodes(StringNode start,  int currentDepth, int maxDepth, Map<StringNode, Integer> nodesToHops) {
-        Set<StringNode> reachable = new HashSet<>();
-
         if (currentDepth < maxDepth) {
             start.getNodeLinks().forEach(neighbor -> {
                 if (!nodesToHops.containsKey(neighbor)) {
@@ -64,51 +64,51 @@ class TeleportationRouter implements Router {
                 }
             });
         }
-
         return nodesToHops;
     }
 
-    private void explore(StringNode current, int remainingHops, Set<StringNode> reachable, Set<StringNode> visited) {
-        if (remainingHops < 0 || visited.contains(current)) return;
-        reachable.add(current);
+    @Override
+    public boolean isLoopBackPossible(StringNode originNode) {
+        boolean isLoopBackPossible = false;
+        Set<StringNode> visited = new HashSet<>();
+
+        for (StringNode neighbor : originNode.getNodeLinks()) {
+            if (loopBackExists(originNode, neighbor, 1, visited)) {
+                isLoopBackPossible = true;
+                break;  // Break out as soon as a loop is discovered.
+            }
+        }
+        return isLoopBackPossible;
+    }
+
+    private boolean loopBackExists(StringNode originNode, StringNode current, int hops, Set<StringNode> visited) {
+        boolean isLoopBack = false;
+
         visited.add(current);
         for (StringNode neighbor : current.getNodeLinks()) {
-            explore(neighbor, remainingHops - 1, reachable, visited);
-        }
-    }
+            // Skip immediate loop back to origin on the first hop.
+            if (hops <=1 && neighbor.equals(originNode)) {
+                continue;
+            }
 
-    @Override
-    public Set<Route> findAllRoutesBetweenNodes(StringNode start, StringNode end) {
-        return Set.of();
-    }
+            // Skip the neighbor if it has already been visited.
+            if (visited.contains(neighbor)) {
+                continue;
+            }
 
-    @Override
-    public Route findUniqueReturnRoute(Route route) {
-        Set<StringNode> visited = new HashSet<>(route.getPath());
-        StringNode lastNode = route.getPath().getLast();
-        Route uniqueRoute = new Route();
+            //  Succeed-fast breaker: Immediately break the loop if next neighbor matches the origin.
+            if (neighbor.equals(originNode)) {
+                isLoopBack = true;
+            } else {
+                //  recurse (descend) further.
+                isLoopBack = loopBackExists(originNode, neighbor, hops + 1, visited);
+            }
 
-        if (findReturnRoute(lastNode, visited, uniqueRoute)) {
-            return uniqueRoute;
-        }
-
-        return null;
-    }
-
-    private boolean findReturnRoute(StringNode current, Set<StringNode> excluded, Route uniqueRoute) {
-        if (excluded.contains(current)) return false;
-
-        uniqueRoute.addNode(current);
-        excluded.add(current);
-
-        for (StringNode neighbor : current.getNodeLinks()) {
-            if (findReturnRoute(neighbor, excluded, uniqueRoute)) {
-                return true;
+            if (isLoopBack) {
+                break;  // Break out as soon as a loop is discovered.
             }
         }
 
-        uniqueRoute.getPath().removeLast();
-        excluded.remove(current);
-        return false;
+        return isLoopBack;
     }
 }

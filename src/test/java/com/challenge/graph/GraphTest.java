@@ -51,39 +51,39 @@ class GraphTest extends BaseGraphTest{
         // Test that the reachableNodes method returns the expected set of nodes for a given start node.
         // Leverage the reachableNodes method in the Graph class to achieve this, specifying a maxHops value larger than
         // the maximum allowed hops.
-        var reachableNodes = graph.reachableNodes("washington", Graph.MAX_ALLOWED_HOPS + 1);
+        var reachableNodes = graph.reachableNodes("Washington", Graph.MAX_ALLOWED_HOPS + 1);
         assertEquals(5, reachableNodes.size());
         assertTrue(reachableNodes.stream()
                         .map(StringNode::getName)
                         .collect(Collectors.toSet())
-                        .containsAll(Set.of("atlanta", "baltimore", "philadelphia", "new york", "seattle")));
+                        .containsAll(Set.of("Atlanta", "Baltimore", "Philadelphia", "New York", "Seattle")));
     }
 
     @Test
     void testReachableNodesWithinOneHop() {
-        var reachableNodes = graph.reachableNodes("washington", 1);
+        var reachableNodes = graph.reachableNodes("Washington", 1);
         assertEquals(2, reachableNodes.size());
         assertTrue(reachableNodes.stream()
                 .map(StringNode::getName)
                 .collect(Collectors.toSet())
-                .containsAll(Set.of("atlanta", "baltimore")));
+                .containsAll(Set.of("Atlanta", "Baltimore")));
     }
 
     @Test
     void testReachableNodesWithinTwoHops() {
-        var reachableNodes = graph.reachableNodes("washington", 2);
+        var reachableNodes = graph.reachableNodes("Washington", 2);
         assertEquals(4, reachableNodes.size());
         assertTrue(reachableNodes.stream()
                 .map(StringNode::getName)
                 .collect(Collectors.toSet())
-                .containsAll(Set.of("atlanta", "baltimore", "philadelphia", "seattle")));
+                .containsAll(Set.of("Atlanta", "Baltimore", "Philadelphia", "Seattle")));
     }
 
     @Test
     void testIsCityReachable() {
-        assertTrue(graph.isCityReachableFrom("washington", "new york"));
-        assertTrue(graph.isCityReachableFrom("washington", "seattle"));
-        assertFalse(graph.isCityReachableFrom("washington", "san fransisco"));
-        assertFalse(graph.isCityReachableFrom("washington", "San fransisco"));
+        assertTrue(graph.isCityReachableFrom("Washington", "New York"));
+        assertTrue(graph.isCityReachableFrom("Washington", "Seattle"));
+        assertFalse(graph.isCityReachableFrom("Washington", "san fransisco"));
+        assertFalse(graph.isCityReachableFrom("Washington", "San fransisco"));
     }
 }
