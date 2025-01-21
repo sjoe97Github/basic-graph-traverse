@@ -130,6 +130,8 @@ All tests are unit tests, except for the TestRunAllQueries test class; this clas
 2. Add support for weighted edges (e.g., teleportation cost or time).  This would require a "link object" rather than just a StringNode in a collection.
 3. Implement additional query types (e.g., shortest path between cities).
 4. Optimize graph traversal algorithms for larger datasets; or just optimizations of the current depth-first-search approach used and reused almost exclusively. (Only need to replace with a new Router to improve the navigation.)
+5. Eliminate use of recursion
+6. Defined and enforce a maximum number of hops, especially if continue to use recursion.  ('would have to enforce/check on parsing/graph building, as well as during traversal)
 5. Modify the TestApplication to accept user questions until some defined 'stop' indication from the user.  (A more direct Q&A interface with the application.)
 
 ## Lessons Learned

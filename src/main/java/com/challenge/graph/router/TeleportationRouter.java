@@ -15,36 +15,6 @@ class TeleportationRouter implements Router {
         // Additional initialization if needed
     }
 
-    @Override
-    public Route route(StringNode start, StringNode end, int maxHops) {
-        Route route = new Route();
-        Set<StringNode> visited = new HashSet<>();
-        if (dfs(start, end, maxHops, visited, route)) {
-            return route;
-        }
-        return null;
-    }
-
-    private boolean dfs(StringNode current, StringNode end, int remainingHops, Set<StringNode> visited, Route route) {
-        if (remainingHops < 0) return false;
-        if (visited.contains(current)) return false;
-
-        visited.add(current);
-        route.addNode(current);
-
-        if (current.equals(end)) return true;
-
-        for (StringNode neighbor : current.getNodeLinks()) {
-            if (dfs(neighbor, end, remainingHops - 1, visited, route)) {
-                return true;
-            }
-        }
-
-        route.getPath().removeLast();
-        visited.remove(current);
-        return false;
-    }
-
     /**
      * Recursively traverse the graph to find all nodes that can be reached from the given start node.
      * This method uses a recursive depth-first search (DFS) algorithm to traverse the graph, avoiding cycles.
@@ -110,5 +80,51 @@ class TeleportationRouter implements Router {
         }
 
         return isLoopBack;
+    }
+
+    /**
+     * TODO - Not currently used during query execution related navigation.
+     * @param start
+     * @param end
+     * @param maxHops
+     * @return
+     */
+    @Override
+    public Route route(StringNode start, StringNode end, int maxHops) {
+        Route route = new Route();
+        Set<StringNode> visited = new HashSet<>();
+        if (dfs(start, end, maxHops, visited, route)) {
+            return route;
+        }
+        return null;
+    }
+
+    /**
+     * TODO - Not currently used during query execution related navigation.
+     * @param current
+     * @param end
+     * @param remainingHops
+     * @param visited
+     * @param route
+     * @return
+     */
+    private boolean dfs(StringNode current, StringNode end, int remainingHops, Set<StringNode> visited, Route route) {
+        if (remainingHops < 0) return false;
+        if (visited.contains(current)) return false;
+
+        visited.add(current);
+        route.addNode(current);
+
+        if (current.equals(end)) return true;
+
+        for (StringNode neighbor : current.getNodeLinks()) {
+            if (dfs(neighbor, end, remainingHops - 1, visited, route)) {
+                return true;
+            }
+        }
+
+        route.getPath().removeLast();
+        visited.remove(current);
+        return false;
     }
 }

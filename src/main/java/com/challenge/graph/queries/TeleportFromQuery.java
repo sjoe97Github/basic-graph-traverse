@@ -1,9 +1,6 @@
 package com.challenge.graph.queries;
 
 import com.challenge.graph.Graph;
-import com.challenge.graph.StringNode;
-
-import java.util.stream.Collectors;
 
 public class TeleportFromQuery implements GraphQuery {
     private static final String RESULT_PREFIX_TEMPLATE = "can I teleport from %s to %s: %s";

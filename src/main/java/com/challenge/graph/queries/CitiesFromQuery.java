@@ -3,7 +3,6 @@ package com.challenge.graph.queries;
 import com.challenge.graph.Graph;
 import com.challenge.graph.StringNode;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;

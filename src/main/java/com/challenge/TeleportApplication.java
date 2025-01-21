@@ -32,7 +32,7 @@ public class TeleportApplication {
                 }
                 parser.parse(file);
             } else if (System.in.available() > 0) {
-                // Piped input
+                // Piped or redirected input:
                 // The BufferedReader will read from System.in, so we don't need to close it.  Therefore, I did
                 // not introduce an overloaded parse method that takes a BufferedReader or the InputStreamReader.
                 // Instead, I just wrap the BufferedReader around System.in and call an overloaded parse method that

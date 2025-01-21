@@ -1,6 +1,5 @@
 package com.challenge.graph;
 
-import com.challenge.graph.router.Route;
 import com.challenge.graph.router.Router;
 import com.challenge.graph.router.RouterFactory;
 import com.challenge.graph.utility.Pair;

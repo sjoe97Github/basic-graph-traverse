@@ -19,16 +19,6 @@ public class InputFileParser {
     //  Maintain the order of the queries parsed from the input file
     private final List<GraphQuery> queries = new LinkedList<>();
 
-    public void parse(String filePath) throws IOException {
-
-        File fileToParse = new File(filePath);
-        if (!fileToParse.exists()) {
-            throw new IllegalArgumentException("File does not exist: " + filePath);
-        }
-
-        parse(fileToParse);
-    }
-
     public void parse(File file) {
         try (Stream<String> lines = Files.lines(file.toPath())) {
             parseLines(lines);

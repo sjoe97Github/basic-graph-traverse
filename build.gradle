@@ -12,6 +12,7 @@ java {
 }
 
 jar {
+    archiveFileName = 'acmeTraverser.jar'
     manifest {
         attributes(
                 'Main-Class': 'com.challenge.TeleportApplication'
@@ -30,4 +31,41 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+tasks.register('sourcesJar', Jar) {
+    archiveFileName = 'acmeTraverserSrc.jar'
+    archiveClassifier.set('sources')
+    
+    from(sourceSets.main.allJava) {
+        into 'src/main/java'
+    }
+    
+    from(sourceSets.test.allJava) {
+        into 'src/test/java'
+    }
+    
+    from(sourceSets.main.resources) {
+        into 'src/main/resources'
+    }
+
+    from(sourceSets.test.resources) {
+        into 'src/test/resources'
+    }
+    
+    from(project.rootDir) {
+        include 'README.md'
+        include '.gitignore'
+        include 'build.gradle'
+        include 'gradlew'
+        include 'gradlew.bat'
+        include 'input.txt'
+    }
+
+    exclude 'build/**'
+    exclude 'META-INF/MANIFEST.MF'
+}
+
+artifacts {
+    archives sourcesJar
 }
