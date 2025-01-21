@@ -6,15 +6,15 @@ There are three ways to run this application from the command line:
 
 1. Using a file as input:
 
-   **`java -jar TeleportApplication.jar {input_file_path}`**
+   **`java -jar acmeTraverser.jar {input_file_path}`**
 
 2. Using piped input:
 
-   **`cat input.txt | java -jar TeleportApplication.jar`**
+   **`cat input.txt | java -jar acmeTraverser.jar`**
 
 3. Using input redirection:
 
-   **`java -jar ./build/libs/TeleportApplication.jar < {input_file_path}`**
+   **`java -jar ./build/libs/acmeTraverser.jar < {input_file_path}`**
 
 ## Design Overview
 
@@ -48,8 +48,7 @@ the following methods:
 1. prepare() - parses the raw question from the input file (e.g. _can I teleport from Oakland to Atlanta_)
 2. execute(Graph graph) - executes the parsed question (query) against ths specified graph instance
 3. getResult() - Simply returns the result from a previous execute() request.
-**Note** - execute saves the query result for later access by getResult(), but execute() also returns the result.  A
-query result
+
 <div style="border: 1px solid #ccc; padding: 10px; border-radius: 5px;">
    <strong>Note:</strong> execute() returns the result as well as saves it for later access by getResult(). The
     response from a query is simply a string containing the specified prefix (from problem specification) concatenated 
@@ -71,8 +70,7 @@ The main components are:
     - `LoopPossibleQuery`
 
 ### High-level Overview of Running TeleportationApplication 
-(see the _How to Run_(#how-to-run) section for specifics about how to run the application from the command line.)
-
+(see the [How to Run](#how-to-run) section for specifics about how to run the application from the command line.)
 This section simply contains a general overview of how the application works.
 
 The main method is responsible for:
@@ -112,29 +110,58 @@ For reference, the test class hierarchy is shown here:
     The testinput.txt and testoutput.txt files are under the test/resources folder
 
 #### Developer Note Regarding Testing
-The tests were built alongside component development.  Taking this approach allowed me to better understand how components should be designed/implemented, as well as discover bugs early on in the development process. 
-I could flesh out the test coverage in probably all test classes to cover various edge or anticipated error cases, but I left this to a future enhancement as I ran out of time.
+The tests were built alongside component development, which allowed me to flesh out design and implementation details in "real-time". This approach also exposed bugs and other pitfalls early on in the development process. 
 
-All tests are unit tests, except for the TestRunAllQueries test class; this class is a functional test that covers input-to-output functionality similar to what is performed by the TestApplication class.
+All tests are unit tests, except for the TestRunAllQueries test class, which is a functional test that covering input-to-output functionality similar to what is performed by the TestApplication class.
+
+## Build Notes
+This project is Java 17, Gradle project. 
+
+The _**build.gradle**_ file includes a '**_sourcesJar_**' task definition for generating a jar containing the source, test data files, and other relevant files of interest.
+
+Build the project using a typical Gradle commands such as;
+
+    ./gradlew build
+    ./gradlew clean build
+
+
+Generate the source jar file using the following command:
+
+    ./gradlew build
 
 ## Assumptions/Observations
 
-- Input format is consistent (city names don't contain hyphens, queries follow specific patterns all of which are derived from the input and output examples in the specification).
-- City names are case-sensitive; and cities are represented in the graph as StringNode instances where the node name field is set to the city name.
+- Input format matches input and output examples in the specification.
+- City names are case-sensitive and represented in the graph as StringNode instances, where the node name field is set to the city name.
 - The graph is undirected (if A can teleport to B, B can teleport to A).
-- There are no duplicate links in the input but rather than using sets, lookup maps are used to enforce no duplicates as this fit better how the graph was being navigated.
+- The graph does not allow duplicate nodes (enforce using sets) nor circular links between nodes (enforced when links are established). 
 
 ## Possible Improvements
 
-1. Implement more sophisticated error handling and user feedback.  For simplicity, all "errors" are thrown as RuntimeExceptions or derivations thereof.  Runtime exceptions avoid the interface specification forced by checked exceptions.
-2. Add support for weighted edges (e.g., teleportation cost or time).  This would require a "link object" rather than just a StringNode in a collection.
+1. Implement more sophisticated error handling and user feedback.  For simplicity, all "errors" are thrown as RuntimeExceptions or derivations thereof; thereby avoiding the design implications of using checked exceptions. Furthermore there were no custom exceptions introduced in this design, something that should also be address in a future enhancement.
+2. Add support for 'weighted' edges (e.g., priority, cost, or time).  This would likely require a "link object" rather than, simplpy, collections of StringNodes.
 3. Implement additional query types (e.g., shortest path between cities).
-4. Optimize graph traversal algorithms for larger datasets; or just optimizations of the current depth-first-search approach used and reused almost exclusively. (Only need to replace with a new Router to improve the navigation.)
-5. Eliminate use of recursion
-6. Defined and enforce a maximum number of hops, especially if continue to use recursion.  ('would have to enforce/check on parsing/graph building, as well as during traversal)
-5. Modify the TestApplication to accept user questions until some defined 'stop' indication from the user.  (A more direct Q&A interface with the application.)
+4. Introduce or otherwise optimize new graph traversal algorithms (eg. resource efficiency, order of operations, routing flexibility, scalability, etc.).
+5. Eliminate use of recursion?
+6. Define and enforce a realistic maximum number of hops, especially if continue to use recursion. 
+7. Add support for additional graph traversal questions (queries).
+8. Modify the TeleportApplication to accept user questions until some defined 'stop' indication from the user.  (A more direct Q&A interface with the application.)
 
 ## Lessons Learned
 
-1. I started out attempting to design something more generic and flexible.  Instead, given the time constraints, I should have designed specifically for the specification.  The specified problem and use-cases is simple enough to justify this prototype style of design approach.  Going forward, we could iterate on the initial design to improve and enhance in order to be far more flexible and generic.
-2. Time constraints also forced me to skimp on error handling, good comments and documentation, variable and method and class and package names, and test coverage.  In a real world situation we could have addressed this particular area of concern during daily standups and sprint planning (ideally, anyway).
+1. I started out attempting to design something more generic and flexible.  
+
+    Instead, given the time constraints, I should have designed specifically for the specification.
+
+    The specified problem and use-cases is simple enough to justify this prototype style of design approach.  
+
+    Going forward, we could iterate on the initial design to improve and enhance in order to be far more flexible and generic.
+
+
+2. Time constraints also forced me to skimp on:
+   - error handling, 
+   - good comments and documentation, 
+   - variable, method, class and package names, and test coverage.
+
+    
+    In a real world project, much of this type of "corner cutting" can be mitigated or eliminated altogether with good quarterly and sprint planning, and during daily standups.
