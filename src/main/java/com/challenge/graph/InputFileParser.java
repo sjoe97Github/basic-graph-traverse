@@ -29,31 +29,17 @@ public class InputFileParser {
         parse(fileToParse);
     }
 
-//    public void parse(ClassPathResource resource) throws IOException {
-//        parse(resource.getFile());
-//    }
-
     public void parse(File file) {
         try (Stream<String> lines = Files.lines(file.toPath())) {
             parseLines(lines);
         } catch (IOException ex) {
             throw new RuntimeException(String.format("Input File Parsing Error: I/O error while attempting to read input file, %s", file.getAbsolutePath()), ex);
         }
-        //  Alternative parsing using BufferedReader.  This is commented out but left here as an illustration of the
-        //  older style of using a BufferedReader.
-        //        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-        //            String line;
-        //            while ((line = reader.readLine()) != null) {
-        //                if (line.startsWith("LINK")) {
-        //                    String[] parts = line.split(" ");
-        //                    links.add(new Pair(parts[1], parts[2]));
-        //                } else if (line.startsWith("QUERY")) {
-        //                    queries.add(new Query(line.substring(6)));
-        //                }
-        //            }
-        //        } catch (IOException ex) {
-        //            throw new RuntimeException(String.format("Input File Parsing Error: Error reading input file, %s", file.getAbsolutePath()), ex);
-        //        }
+    }
+
+    // Simply a public overload to keep the interface simple and not have to expose the "internal" parseLines() method.
+    public void parse(Stream<String> lines) {
+        parseLines(lines);
     }
 
     /**
